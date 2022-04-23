@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_comix"
+    tools:context=".activities.HomeActivity"
+    android:keepScreenOn="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/home_BTN_play"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:text="Play"
+                android:textSize="25sp"
+                android:fontFamily="cursive"
+                android:textColor="@color/black"
+                android:backgroundTint="#F7FF93"
+                app:icon="@drawable/ic_play"
+                app:iconGravity="end"
+                app:iconSize="28dp"
+                app:iconTint="@null">
+            </com.google.android.material.button.MaterialButton>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/home_BTN_playsensor"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:text="Play Sensor"
+                android:textSize="25sp"
+                android:fontFamily="cursive"
+                android:textColor="@color/black"
+                android:backgroundTint="#F7FF93"
+                app:icon="@drawable/ic_playsensor"
+                app:iconGravity="end"
+                app:iconSize="28dp"
+                app:iconTint="@null">
+            </com.google.android.material.button.MaterialButton>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/home_BTN_top10"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:text="Top 10"
+                android:textSize="25sp"
+                android:fontFamily="cursive"
+                android:textColor="@color/black"
+                android:backgroundTint="#F7FF93"
+                app:icon="@drawable/ic_medal"
+                app:iconGravity="end"
+                app:iconSize="28dp"
+                app:iconTint="@null">
+            </com.google.android.material.button.MaterialButton>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/home_BTN_sound"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_soundon"
+                android:backgroundTint="@color/white"/>
+
+            <ImageButton
+                android:id="@+id/home_BTN_vibration"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/ic_vibrationon"
+                android:backgroundTint="@color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

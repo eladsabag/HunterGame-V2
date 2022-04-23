@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/scores_BTN_playagain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Play Again"
+        android:textSize="25sp"
+        android:fontFamily="cursive"
+        android:textColor="@color/black"
+        android:backgroundTint="#6BCB77"
+        app:icon="@drawable/ic_play"
+        app:iconGravity="end"
+        app:iconSize="28dp"
+        app:iconTint="@null">
+    </com.google.android.material.button.MaterialButton>
+</RelativeLayout>
