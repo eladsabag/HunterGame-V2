@@ -13,6 +13,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -103,13 +104,24 @@ public class GameActivity extends AppCompatActivity {
                             }
                         }
                 );
-
         // check whether your app already has the permissions,
         // and whether your app needs to show a permission rationale dialog.
         locationPermissionRequest.launch(new String[] {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
+        // get last known location(before change) and set latitude and longitude
+        Criteria locationCritera = new Criteria();
+        locationCritera.setAccuracy(Criteria.ACCURACY_FINE);
+        locationCritera.setAltitudeRequired(false);
+        locationCritera.setBearingRequired(false);
+        locationCritera.setCostAllowed(true);
+        locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
+        String providerName = mLocationManager.getBestProvider(locationCritera, true);
+        Location location  = mLocationManager.getLastKnownLocation(providerName);
+
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
 
         getSupportActionBar().hide();
 
