@@ -76,10 +76,10 @@ public class ScoresActivity extends AppCompatActivity {
         fragment_map = new Fragment_Map();
         fragment_map.setCallBack_ScoreClicked(callBack_ScoreClicked);
         // read the last 1st score coordinates from shared preferences
-        // if exist, else init with Sydny Location.
+        // if exist, else init with Ness Ziona Location.
         fragment_map.setChosenMap(
-                (double)prefs.getFloat("Latitude", (float) -33.718948),
-                (double)prefs.getFloat("Longitude", (float) 151.092689));
+                (double)prefs.getFloat("Latitude", (float) 31.934849725807606),
+                (double)prefs.getFloat("Longitude", (float) 34.804768052711324));
         getSupportFragmentManager().beginTransaction().add(R.id.scores_LAY_map, fragment_map).commit();
 
         isSound = getIntent().getExtras().getBoolean("Sound");

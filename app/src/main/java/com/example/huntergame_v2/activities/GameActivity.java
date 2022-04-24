@@ -67,7 +67,7 @@ public class GameActivity extends AppCompatActivity {
         @Override
         public void onLocationChanged(final Location location) {
             latitude = location.getLatitude();
-            longitude = location.getLatitude();
+            longitude = location.getLongitude();
         }
     };
 
@@ -99,7 +99,7 @@ public class GameActivity extends AppCompatActivity {
                             } else {
                                 // No location access granted.
                                 // Then we can't use the location track and the 1st score location functionality is disabled.
-                                // That's why we have set the default location to Sydny(could be anywhere else just need default).
+                                // That's why we have set the default location to Ness Ziona(could be anywhere else just need default).
                             }
                         }
                 );
