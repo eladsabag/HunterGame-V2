@@ -72,13 +72,120 @@ public class GameActivity extends AppCompatActivity {
         }
     };
 
-    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         // Location Settings
+        setLocationSettings();
+
+        getSupportActionBar().hide();
+
+        gameManager = new GameManager();
+        player = new Player(6,2,"Player");
+        hunter = new Player(0,2,"Hunter");
+
+        findViews();
+
+        isSensor = getIntent().getExtras().getBoolean("Sensor");
+        isSound = getIntent().getExtras().getBoolean("Sound");
+        isVibration = getIntent().getExtras().getBoolean("Vibration");
+
+        if(isSensor) { // sensor mode
+            setSensorMode();
+        } else { // regular mode
+            setRegularMode();
+        }
+
+        if(isSound) {
+            ring = MediaPlayer.create(GameActivity.this, R.raw.moose);
+            ring.start();
+        }
+
+        startScoreTimer();
+    }
+
+    /**
+     * This function sets the game mode to regular(only buttons).
+     */
+    private void setRegularMode() {
+        // up
+        game_BTN_arrows[0].setOnClickListener(e -> {
+            direction=0;
+            setChosenArrowButton(0);
+        });
+
+        // down
+        game_BTN_arrows[1].setOnClickListener(e -> {
+            direction=1;
+            setChosenArrowButton(1);
+        });
+
+        // right
+        game_BTN_arrows[2].setOnClickListener(e -> {
+            direction=2;
+            setChosenArrowButton(2);
+        });
+
+        // left
+        game_BTN_arrows[3].setOnClickListener(e -> {
+            direction=3;
+            setChosenArrowButton(3);
+        });
+    }
+
+    /**
+     * This function sets the game mode to sensors.
+     */
+    private void setSensorMode() {
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        accSensorEventListener = new SensorEventListener() {
+
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                NumberFormat formatter = new DecimalFormat("#0.00");
+
+                if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    float x = sensorEvent.values[0];
+                    float y = sensorEvent.values[1];
+
+                    // move up through sensor
+                    if(y < 3) {
+                        direction=0;
+                        setChosenArrowButton(0);
+                    }
+                    // move down through sensor
+                    if(y > 8) {
+                        direction=1;
+                        setChosenArrowButton(1);
+                    }
+                    // move right through sensor
+                    if(x < -3) {
+                        direction=2;
+                        setChosenArrowButton(2);
+                    }
+                    // move left through sensor
+                    if(x > 3) {
+                        direction=3;
+                        setChosenArrowButton(3);
+                    }
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int i) {
+                Log.d("pttt", "onAccuracyChanged");
+            }
+        };
+    }
+
+    /**
+     * This function sets the location settings of the user at the current game.
+     */
+    private void setLocationSettings() {
         Criteria locationCritera = new Criteria();
         locationCritera.setAccuracy(Criteria.ACCURACY_FINE);
         locationCritera.setAltitudeRequired(false);
@@ -86,7 +193,7 @@ public class GameActivity extends AppCompatActivity {
         locationCritera.setCostAllowed(true);
         locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        ActivityResultLauncher<String[]> locationPermissionRequest =
+        @SuppressLint("MissingPermission") ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
                                 .RequestMultiplePermissions(), result -> {
                             Boolean fineLocationGranted = result.getOrDefault(
@@ -124,93 +231,6 @@ public class GameActivity extends AppCompatActivity {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
-
-        getSupportActionBar().hide();
-
-        gameManager = new GameManager();
-        player = new Player(6,2,"Player");
-        hunter = new Player(0,2,"Hunter");
-
-        findViews();
-
-        isSensor = getIntent().getExtras().getBoolean("Sensor");
-        isSound = getIntent().getExtras().getBoolean("Sound");
-        isVibration = getIntent().getExtras().getBoolean("Vibration");
-
-        if(isSensor) { // sensor mode
-            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-            accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-            accSensorEventListener = new SensorEventListener() {
-
-                @Override
-                public void onSensorChanged(SensorEvent sensorEvent) {
-                    NumberFormat formatter = new DecimalFormat("#0.00");
-
-                    if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                        float x = sensorEvent.values[0];
-                        float y = sensorEvent.values[1];
-
-                        // move up through sensor
-                        if(y < 3) {
-                            direction=0;
-                            setChosenArrowButton(0);
-                        }
-                        // move down through sensor
-                        if(y > 8) {
-                            direction=1;
-                            setChosenArrowButton(1);
-                        }
-                        // move right through sensor
-                        if(x < -3) {
-                            direction=2;
-                            setChosenArrowButton(2);
-                        }
-                        // move left through sensor
-                        if(x > 3) {
-                            direction=3;
-                            setChosenArrowButton(3);
-                        }
-                    }
-                }
-
-                @Override
-                public void onAccuracyChanged(Sensor sensor, int i) {
-                    Log.d("pttt", "onAccuracyChanged");
-                }
-            };
-        } else { // regular mode
-            // up
-            game_BTN_arrows[0].setOnClickListener(e -> {
-                direction=0;
-                setChosenArrowButton(0);
-            });
-
-            // down
-            game_BTN_arrows[1].setOnClickListener(e -> {
-                direction=1;
-                setChosenArrowButton(1);
-            });
-
-            // right
-            game_BTN_arrows[2].setOnClickListener(e -> {
-                direction=2;
-                setChosenArrowButton(2);
-            });
-
-            // left
-            game_BTN_arrows[3].setOnClickListener(e -> {
-                direction=3;
-                setChosenArrowButton(3);
-            });
-        }
-
-        if(isSound) {
-            ring = MediaPlayer.create(GameActivity.this, R.raw.moose);
-            ring.start();
-        }
-
-        startScoreTimer();
     }
 
     /**

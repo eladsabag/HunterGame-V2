@@ -27,14 +27,18 @@ import com.example.huntergame_v2.R;
 import com.google.android.material.button.MaterialButton;
 
 public class HomeActivity extends AppCompatActivity {
+    // Shared Preferences
     public static final String MY_PREFS_NAME = "MyPrefsFile";
+    private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
+    // Home
     private MaterialButton home_BTN_play, home_BTN_playsensor, home_BTN_top10;
     private MediaPlayer ring;
     private ImageButton home_BTN_sound,home_BTN_vibration,home_BTN_user;
-    private boolean isSound, isVibration;
 
+    // Settings
+    private boolean isSound, isVibration;
     private boolean isChoseUsername;
     private String username;
 
@@ -43,13 +47,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
-        isSound = prefs.getBoolean("Sound",true);
-        isVibration = prefs.getBoolean("Vibration",true);
-        isChoseUsername = prefs.getBoolean("ChoseUsername",true);
-        username = prefs.getString("Username","");
+        readSettingsFromSharedPreferences();
 
         if(isChoseUsername) {
             chooseUsername();
@@ -65,6 +66,13 @@ public class HomeActivity extends AppCompatActivity {
         ring = MediaPlayer.create(HomeActivity.this,R.raw.jazzyfrenchy);
 
         setSoundAndVibrationResources();
+    }
+
+    private void readSettingsFromSharedPreferences() {
+        isSound = prefs.getBoolean("Sound",true);
+        isVibration = prefs.getBoolean("Vibration",true);
+        isChoseUsername = prefs.getBoolean("ChoseUsername",true);
+        username = prefs.getString("Username","");
     }
 
     /**
@@ -271,6 +279,17 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function saves all settings chosen by user into shared preferences.
+     */
+    private void saveSettingsToSharedPreferences() {
+        editor.putBoolean("Sound",isSound);
+        editor.putBoolean("Vibration",isVibration);
+        editor.putBoolean("ChoseUsername",isChoseUsername);
+        editor.putString("Username",username);
+        editor.apply();
+    }
+
     // ---------- ---------- Cycle ---------- ----------
 
     @Override
@@ -290,10 +309,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        editor.putBoolean("Sound",isSound);
-        editor.putBoolean("Vibration",isVibration);
-        editor.putBoolean("ChoseUsername",isChoseUsername);
-        editor.putString("Username",username);
-        editor.apply();
+        saveSettingsToSharedPreferences();
     }
 }

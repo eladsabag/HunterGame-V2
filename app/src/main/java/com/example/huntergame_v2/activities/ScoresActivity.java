@@ -17,12 +17,7 @@ import com.example.huntergame_v2.fragments.Fragment_Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class ScoresActivity extends AppCompatActivity {
     // Scores & Sounds
@@ -49,11 +44,15 @@ public class ScoresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scores);
 
+        // calling the action bar
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(null);
+
         prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
         // get the maps jsons from shared preferences or initial init
-        readMapsFromJsons();
+        readMapsFromSharedPreferences();
 
         // read max score from last game played, and read latitude and longitude if needed
         // lastScore == -1 when intent starts from Home Activity, then this actions are unnecessary.
@@ -62,14 +61,8 @@ public class ScoresActivity extends AppCompatActivity {
             updateMaps();
 
             // when new score arrives from last game played then save the maps as jsons into shared preference.
-            saveMapsToJsons();
+            saveMapsToSharedPreferences();
         }
-
-
-        // calling the action bar
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setTitle(null);
 
         fragment_rank = new Fragment_Rank();
         fragment_rank.setCallBack_ScoreClicked(callBack_ScoreClicked);
@@ -90,24 +83,24 @@ public class ScoresActivity extends AppCompatActivity {
         }
 
         FrameLayout layout = (FrameLayout)findViewById(R.id.scores_LAY_button);
-        if(isPlayAgain) {
+        if(isPlayAgain) { // came from game
             if(layout.getVisibility() == View.GONE)
                 layout.setVisibility(View.VISIBLE);
             // showing the back button in action bar
             actionBar.setDisplayHomeAsUpEnabled(true);
             fragment_button = new Fragment_Button();
             getSupportFragmentManager().beginTransaction().add(R.id.scores_LAY_button, fragment_button).commit();
-        } else {
+        } else { // came from home
             actionBar.setDisplayHomeAsUpEnabled(false);
-            layout.setVisibility(View.GONE);
             getSupportActionBar().hide();
+            layout.setVisibility(View.GONE);
         }
     }
 
     /**
      * This function reads the maps jsons from shared preferences and init them.
      */
-    private void readMapsFromJsons() {
+    private void readMapsFromSharedPreferences() {
         String json1 = prefs.getString("ScoresAndLatitudes",null);
         String json2 = prefs.getString("ScoresAndLongitudes",null);
 
@@ -124,7 +117,7 @@ public class ScoresActivity extends AppCompatActivity {
     /**
      * This function saves the scores and latitudes/longitudes maps as jsons into shared preferences.
      */
-    private void saveMapsToJsons() {
+    private void saveMapsToSharedPreferences() {
         String j1 = new Gson().toJson(scoresAndLatitudes);
         String j2 = new Gson().toJson(scoresAndLongitudes);
 
