@@ -1,7 +1,9 @@
 package com.example.huntergame_v2.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
@@ -9,9 +11,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import com.example.huntergame_v2.R;
 import com.google.android.material.button.MaterialButton;
 
@@ -21,8 +32,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private MaterialButton home_BTN_play, home_BTN_playsensor, home_BTN_top10;
     private MediaPlayer ring;
-    private ImageButton home_BTN_sound,home_BTN_vibration;
+    private ImageButton home_BTN_sound,home_BTN_vibration,home_BTN_user;
     private boolean isSound, isVibration;
+
+    private boolean isChoseUsername;
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +48,13 @@ public class HomeActivity extends AppCompatActivity {
 
         isSound = prefs.getBoolean("Sound",true);
         isVibration = prefs.getBoolean("Vibration",true);
+        isChoseUsername = prefs.getBoolean("ChoseUsername",true);
+        username = prefs.getString("Username","");
+
+        if(isChoseUsername) {
+            chooseUsername();
+        } else
+            Toast.makeText(HomeActivity.this,"Hi " + username,Toast.LENGTH_LONG).show();
 
         getSupportActionBar().hide();
 
@@ -44,6 +65,74 @@ public class HomeActivity extends AppCompatActivity {
         ring = MediaPlayer.create(HomeActivity.this,R.raw.jazzyfrenchy);
 
         setSoundAndVibrationResources();
+    }
+
+    private void chooseUsername() {
+        // Set `EditText` to `dialog`. You can add `EditText` from `xml` too.
+        final EditText input = new EditText(HomeActivity.this);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        input.setLayoutParams(lp);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setIcon(android.R.drawable.ic_dialog_info);
+        builder.setTitle("Enter username");
+        builder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        username = input.getText().toString();
+                        isChoseUsername = false;
+                    }
+                });
+        if(!isChoseUsername) {
+            builder.setMessage("Hi " + username + ", you can change your user name here. click cancel if you don't want to change your user name.");
+            builder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            // DO TASK
+                        }
+                    });
+        }
+        builder.setCancelable(false);
+        builder.setView(input);
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Initially disable the button
+        ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+        // Set the textchange listener for edittext
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                // Check if edittext is empty
+                if (TextUtils.isEmpty(s)) {
+                    // Disable ok button
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+
+                } else {
+                    // Something into edit text. Enable the button.
+                    ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+
+            }
+        });
     }
 
     private void setSoundAndVibrationResources() {
@@ -146,6 +235,8 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        home_BTN_user.setOnClickListener(e -> chooseUsername());
     }
 
     /**
@@ -157,6 +248,7 @@ public class HomeActivity extends AppCompatActivity {
         home_BTN_top10 = findViewById(R.id.home_BTN_top10);
         home_BTN_sound = findViewById(R.id.home_BTN_sound);
         home_BTN_vibration = findViewById(R.id.home_BTN_vibration);
+        home_BTN_user = findViewById(R.id.home_BTN_user);
     }
 
     /**
@@ -194,6 +286,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onStop();
         editor.putBoolean("Sound",isSound);
         editor.putBoolean("Vibration",isVibration);
+        editor.putBoolean("ChoseUsername",isChoseUsername);
+        editor.putString("Username",username);
         editor.apply();
     }
 }

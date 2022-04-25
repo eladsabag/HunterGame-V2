@@ -20,7 +20,7 @@ import java.util.TreeMap;
 public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private double latitude=-33.924167, longitude=150.882190;
+    private double latitude=-33.924167, longitude=150.882190; // default location
     private TreeMap<Integer, Double> scoresAndLatitudes;
     private TreeMap<Integer,Double> scoresAndLongitudes;
     private float zoomLevel = 5.0f;
@@ -66,7 +66,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
             latitude = (double) scoresAndLatitudes.get(key);
             longitude = (double) scoresAndLongitudes.get(key);
             currentScore ="Score Location: " + key;
-        } else {
+        } else { // default location
             latitude=-33.924167;
             longitude=150.882190;
             currentScore = "Unscored yet :(";
