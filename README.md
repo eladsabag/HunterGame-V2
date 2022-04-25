@@ -1,10 +1,15 @@
 # HunterGame-V2
-This project introduce the hunter game. The game can be played in 2 modes - Buttons or Sensors. 
-Each game has 3 lives and the player target is to escape the hunter while collecting coins and increasing his score. 
-The top 10 scores of the player displayed and Top 10 page with the location of his 1st score.
+This project introduce the hunter game. The game can be played in 2 modes - Buttons or Sensors. Each game has 3 lives and the player target is to escape the hunter while collecting coins and increasing his score. The top 10 page displays all top 10 scores of the player and the locations of this scores.
 
-The main page introduce 3 buttons and 2 icons. 
-Each button takes you to different page and the 2 icons enable/disable the sound and vibration of the app.
+The initial load of the app require username:
+
+![Screenshot_20220425-144327_HunterGame-V2](https://user-images.githubusercontent.com/68230346/165087103-a0c7ccb4-ab38-472d-8c62-fb9a6cd4ef74.jpg)
+
+The main page introduce 3 buttons and 3 icons:
+
+![Screenshot_20220425-144335_HunterGame-V2](https://user-images.githubusercontent.com/68230346/165087709-5f7c680b-2b77-464b-82e5-00392f08bb01.jpg)
+
+Each button takes you to different page and the 3 icons enable/disable the sound and vibration of the app and sets the user name.
 
 Sound and Vibration On
 
@@ -14,8 +19,16 @@ Sound and Vibration Off
 
 ![Screenshot_20220424-013733_HunterGame-V2](https://user-images.githubusercontent.com/68230346/164949021-cf165433-c54d-428d-9a4d-6034ac2afe00.jpg)
 
+User name change:
+
+![Screenshot_20220425-144233_HunterGame-V2](https://user-images.githubusercontent.com/68230346/165086962-c481f878-9949-4fea-b4f6-844811cc7ec7.jpg)
+
 If you choose the Play button then the game starts, and you can move with taping on the arrows on screen only.
 If you choose the Play Sensor button then the game starts, and you can move with the phone motion only - move your phone in the direction you want the player to go.
+
+Initial game start requires lcoation permissions(Only happen once):
+
+![Screenshot_20220425-144343_Permission controller](https://user-images.githubusercontent.com/68230346/165087494-5836fa25-3455-451a-9b82-f9e2249896ae.jpg)
 
 ![Screenshot_20220424-013945_HunterGame-V2 (1)](https://user-images.githubusercontent.com/68230346/164949037-924d21ab-0968-40aa-ab5d-e50da138952f.jpg)
 
@@ -31,5 +44,7 @@ Only after the game a tool bar will appear with the option of going back to Home
 If you will enter the Top 10 button from the Home page then the toolbar and play again button won't appear:
 
 ![Screenshot_20220424-014048_HunterGame-V2](https://user-images.githubusercontent.com/68230346/164949140-d11360d3-4493-4aa2-b32d-dc9f30b73486.jpg)
+
+Clicking on 1 out of the 10 scores will add marker to the location where that score happend. if there is unscored button(0) then it will get a default marker in Sydny but without a score.
 
 All of the scores and settings of the user being saved with shared preferences for the next use of the app.
