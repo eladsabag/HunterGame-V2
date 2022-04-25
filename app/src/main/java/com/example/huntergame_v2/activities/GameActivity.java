@@ -45,7 +45,7 @@ public class GameActivity extends AppCompatActivity {
     private Player player,hunter;
     private int direction = -1;
     private boolean move = false;
-    private int coinCounter = 0, coinX, coinY,maxScore = 0;
+    private int coinCounter = 0, coinX = -1, coinY = -1,maxScore = 0;
     private static final int BOARD_X = 7, BOARD_Y = 5;
 
     // Sound & Vibration
@@ -277,6 +277,11 @@ public class GameActivity extends AppCompatActivity {
      * This function randomize location for the coin appearance on game board and set the coin image on the selected location.
      */
     private void randomCoinAppearance() {
+        // only if it is not the first time coins randomized
+        // and the coins location is different from player and hunter
+        // then set the back to web.
+        if(coinX != -1 && coinY != -1)
+            game_IMG_imgs[coinX][coinY].setImageResource(R.drawable.ic_web);
         coinX = (int) (Math.random() * BOARD_X);
         coinY = (int) (Math.random() * BOARD_Y);
         // as long as the coin location equal to player or hunter keep randomizing new location
