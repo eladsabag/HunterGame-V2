@@ -91,6 +91,7 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle("Enter username");
+        builder.setMessage("Hi, before you start playing a sign up is required. Please enter username :)");
         builder.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
