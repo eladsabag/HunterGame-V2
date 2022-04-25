@@ -67,6 +67,9 @@ public class HomeActivity extends AppCompatActivity {
         setSoundAndVibrationResources();
     }
 
+    /**
+     * This function opens a dialog where the user can enter his username.
+     */
     private void chooseUsername() {
         // Set `EditText` to `dialog`. You can add `EditText` from `xml` too.
         final EditText input = new EditText(HomeActivity.this);
@@ -135,6 +138,9 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This function sets the sounds and vibration resources and start the sound if needed.
+     */
     private void setSoundAndVibrationResources() {
         // init sound and vibration pictures and start ring if needed
         if(isSound) {
