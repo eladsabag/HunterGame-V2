@@ -14,15 +14,25 @@ import com.example.huntergame_v2.R;
 import com.example.huntergame_v2.fragments.Fragment_Button;
 import com.example.huntergame_v2.fragments.Fragment_Rank;
 import com.example.huntergame_v2.fragments.Fragment_Map;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class ScoresActivity extends AppCompatActivity {
-    // Scores
+    // Scores & Sounds
     private MediaPlayer ring;
     private boolean isSound,isPlayAgain;
-    private Set<String> scores;
     private int lastScore = 0;
+
+    // Maps
+    private TreeMap<Integer, Double> scoresAndLatitudes;
+    private TreeMap<Integer, Double> scoresAndLongitudes;
 
     // Fragments
     private Fragment_Rank fragment_rank;
@@ -31,6 +41,7 @@ public class ScoresActivity extends AppCompatActivity {
 
     // Shared Preferences
     public static final String MY_PREFS_NAME = "MyPrefsFile";
+    private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
 
     @Override
@@ -38,28 +49,20 @@ public class ScoresActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scores);
 
-        SharedPreferences prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
+        prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
         editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
-        scores = new TreeSet<>((s1, s2) -> Integer.parseInt(s2) - Integer.parseInt(s1));
-
-        // init top 10 scores from shared preferences
-        // if the str isn't exist then init with 0
-        for (int i = 0; i < 10; i++) {
-            scores.add(prefs.getString("str"+i,"0"));
-        }
+        // get the maps jsons from shared preferences or initial init
+        readMapsFromJsons();
 
         // read max score from last game played, and read latitude and longitude if needed
         // lastScore == -1 when intent starts from Home Activity, then this actions are unnecessary.
         lastScore = getIntent().getExtras().getInt("Score");
         if(lastScore != -1) {
-            updateScoreSet();
-            // if the last score equal to first score in set then location must be updated
-            // and can be pushed into the Shared Preferences.
-            if(Integer.parseInt((String) scores.toArray()[0]) == lastScore)
-                editor.putFloat("Latitude",(float)getIntent().getExtras().getDouble("Latitude"));
-                editor.putFloat("Longitude",(float)getIntent().getExtras().getDouble("Longitude"));
-                editor.apply();
+            updateMaps();
+
+            // when new score arrives from last game played then save the maps as jsons into shared preference.
+            saveMapsToJsons();
         }
 
 
@@ -70,16 +73,13 @@ public class ScoresActivity extends AppCompatActivity {
 
         fragment_rank = new Fragment_Rank();
         fragment_rank.setCallBack_ScoreClicked(callBack_ScoreClicked);
-        fragment_rank.setScores((TreeSet<String>) scores);
+        fragment_rank.setAllScores(scoresAndLatitudes.descendingKeySet());
+        fragment_rank.setMaps(scoresAndLatitudes,scoresAndLongitudes);
         getSupportFragmentManager().beginTransaction().add(R.id.scores_LAY_rank, fragment_rank).commit();
 
         fragment_map = new Fragment_Map();
         fragment_map.setCallBack_ScoreClicked(callBack_ScoreClicked);
-        // read the last 1st score coordinates from shared preferences
-        // if exist, else init with Ness Ziona Location.
-        fragment_map.setChosenMap(
-                (double)prefs.getFloat("Latitude", (float) 31.934849725807606),
-                (double)prefs.getFloat("Longitude", (float) 34.804768052711324));
+        fragment_map.setMaps(scoresAndLatitudes,scoresAndLongitudes);
         getSupportFragmentManager().beginTransaction().add(R.id.scores_LAY_map, fragment_map).commit();
 
         isSound = getIntent().getExtras().getBoolean("Sound");
@@ -105,13 +105,46 @@ public class ScoresActivity extends AppCompatActivity {
     }
 
     /**
-     * This function update the scores set and cut it back to size 10 if needed.
+     * This function reads the maps jsons from shared preferences and init them.
      */
-    private void updateScoreSet() {
-        scores.add("" + lastScore);
-        // if there is 11 scores then delete the last one
-        if(scores.size() > 10)
-            scores.remove( ((TreeSet) scores).last() );
+    private void readMapsFromJsons() {
+        String json1 = prefs.getString("ScoresAndLatitudes",null);
+        String json2 = prefs.getString("ScoresAndLongitudes",null);
+
+        if(json1 == null || json2 == null) { // if the jsons are null then initial init of the maps is required.
+            scoresAndLatitudes = new TreeMap<Integer,Double>();
+            scoresAndLongitudes = new TreeMap<Integer,Double>();
+        } else { // else init the maps with the json true value
+            TypeToken token = new TypeToken<TreeMap<Integer,Double>>() {};
+            scoresAndLatitudes = new Gson().fromJson(json1, token.getType());
+            scoresAndLongitudes = new Gson().fromJson(json2, token.getType());
+        }
+    }
+
+    /**
+     * This function saves the scores and latitudes/longitudes maps as jsons into shared preferences.
+     */
+    private void saveMapsToJsons() {
+        String j1 = new Gson().toJson(scoresAndLatitudes);
+        String j2 = new Gson().toJson(scoresAndLongitudes);
+
+        editor.putString("ScoresAndLatitudes",j1);
+        editor.putString("ScoresAndLongitudes",j2);
+        editor.apply();
+    }
+
+    /**
+     * This function retrieves latitude and longitude from last score and update the scores and latitudes/longitudes maps.
+     */
+    private void updateMaps() {
+        scoresAndLatitudes.put(lastScore,getIntent().getExtras().getDouble("Latitude"));
+        scoresAndLongitudes.put(lastScore,getIntent().getExtras().getDouble("Longitude"));
+        if(scoresAndLatitudes.size() > 10) {
+            scoresAndLatitudes.firstEntry();
+        }
+        if(scoresAndLongitudes.size() > 10) {
+            scoresAndLongitudes.firstEntry();
+        }
     }
 
     // this event will enable the back
@@ -149,23 +182,12 @@ public class ScoresActivity extends AppCompatActivity {
             ring.pause();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        int i = 0;
-        for(String s : scores) {
-            editor.putString("str" + i , s);
-            i++;
-        }
-        editor.apply();
-    }
-
     // ---------- ---------- CallBacks ---------- ----------
 
     private CallBack_ScoreClicked callBack_ScoreClicked = new CallBack_ScoreClicked() {
         @Override
-        public void scoreClicked() {
-            fragment_map.focusOnScoreLocationAndZoomIn();
+        public void scoreClicked(int rank) {
+            fragment_map.focusOnScoreLocationAndSetMarker(rank);
         }
     };
 

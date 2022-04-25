@@ -13,12 +13,15 @@ import com.example.huntergame_v2.R;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Fragment_Rank extends Fragment {
     private MaterialButton[] ranks;
     private CallBack_ScoreClicked callBack_ScoreClicked;
-    private TreeSet<String> scores = null;
+    private Set<Integer> scores = null;
+    TreeMap<Integer, Double> scoresAndLatitude = null;
+    TreeMap<Integer, Double> scoresAndLongitude = null;
 
     public void setCallBack_ScoreClicked(CallBack_ScoreClicked callBack_ScoreClicked) {
         this.callBack_ScoreClicked = callBack_ScoreClicked;
@@ -31,34 +34,50 @@ public class Fragment_Rank extends Fragment {
 
         findViews(view);
 
-        ranks[0].setOnClickListener(e -> {
-            if(callBack_ScoreClicked != null)
-                callBack_ScoreClicked.scoreClicked();
-        });
+        initViews();
 
-        if(scores != null)
+        if(scoresAndLatitude != null && scoresAndLongitude != null)
             setRankScores();
 
         return view;
     }
 
+    private void initViews() {
+        for (int i = 0; i < ranks.length; i++) {
+            int finalI = i;
+            ranks[i].setOnClickListener(e -> {
+                if(callBack_ScoreClicked != null)
+                    callBack_ScoreClicked.scoreClicked(finalI);
+            });
+        }
+    }
+
     private void findViews(View view) {
         ranks = new MaterialButton[] {
-          view.findViewById(R.id.rank1),view.findViewById(R.id.rank2),view.findViewById(R.id.rank3),view.findViewById(R.id.rank4),
-                view.findViewById(R.id.rank5),view.findViewById(R.id.rank6),view.findViewById(R.id.rank7),view.findViewById(R.id.rank8)
-                ,view.findViewById(R.id.rank9),view.findViewById(R.id.rank10)
+          view.findViewById(R.id.rank1),view.findViewById(R.id.rank2),view.findViewById(R.id.rank3),
+          view.findViewById(R.id.rank4), view.findViewById(R.id.rank5),view.findViewById(R.id.rank6),
+          view.findViewById(R.id.rank7),view.findViewById(R.id.rank8),view.findViewById(R.id.rank9),
+          view.findViewById(R.id.rank10)
         };
     }
 
+    /**
+     * This function sets the rank scores in the Fragment Rank in reverse order.
+     */
     public void setRankScores() {
         int i = 0;
-        for(String s : scores) {
-            ranks[i].setText(s);
+        for(Integer s : scores) {
+            ranks[i].setText(s+"");
             i++;
         }
     }
 
-    public void setScores(TreeSet<String> scores) {
-        this.scores=scores;
+    public void setMaps(TreeMap<Integer, Double> scoresAndLatitude, TreeMap<Integer, Double> scoresAndLongitude) {
+        this.scoresAndLatitude = scoresAndLatitude;
+        this.scoresAndLongitude = scoresAndLongitude;
+    }
+
+    public void setAllScores(Set<Integer> keySet) {
+        this.scores = keySet;
     }
 }

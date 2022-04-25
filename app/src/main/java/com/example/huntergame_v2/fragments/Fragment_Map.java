@@ -15,15 +15,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import java.util.TreeMap;
 
 public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private double latitude,longitude;
+    private double latitude=-33.924167, longitude=150.882190;
+    private TreeMap<Integer, Double> scoresAndLatitudes;
+    private TreeMap<Integer,Double> scoresAndLongitudes;
     private float zoomLevel = 5.0f;
     private CallBack_ScoreClicked callBack_ScoreClicked;
+    private String currentScore="";
 
-    public void setCallBack_ScoreClicked(CallBack_ScoreClicked callBack_ActivityTitle) {
+    public Fragment_Map() {
+    }
+
+    public void setCallBack_ScoreClicked(CallBack_ScoreClicked callBack_ScoreClicked) {
         this.callBack_ScoreClicked = callBack_ScoreClicked;
     }
 
@@ -44,20 +51,31 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
 
         // Add a marker in Sydney and move the camera
         LatLng topScoreLocation = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(topScoreLocation).title("1st Score Location"));
+        mMap.addMarker(new MarkerOptions().position(topScoreLocation).title(currentScore));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(topScoreLocation, zoomLevel));
     }
 
-    public void setChosenMap(double latitude, double longitude) {
-        this.latitude=latitude;
-        this.longitude=longitude;
+    /**
+     * This function sets the Google Map focus and add marker according to the score rank.
+     * @param rank - This is the key of the latitude and longitude needed for the Google Map settings.
+     */
+    public void focusOnScoreLocationAndSetMarker(int rank) {
+        mMap.clear();
+        if(scoresAndLatitudes.size() > rank) {
+            int key = (int) scoresAndLatitudes.descendingKeySet().toArray()[rank];
+            latitude = (double) scoresAndLatitudes.get(key);
+            longitude = (double) scoresAndLongitudes.get(key);
+            currentScore ="Score Location: " + key;
+        } else {
+            latitude=-33.924167;
+            longitude=150.882190;
+            currentScore = "Unscored yet :(";
+        }
+        onMapReady(mMap);
     }
 
-    public void focusOnScoreLocationAndZoomIn() {
-        if(zoomLevel == 20.f)
-            zoomLevel = 5.0f;
-        else
-            this.zoomLevel += 2.5f;
-        onMapReady(mMap);
+    public void setMaps(TreeMap<Integer, Double> scoresAndLatitudes, TreeMap<Integer, Double> scoresAndLongitudes) {
+        this.scoresAndLatitudes = scoresAndLatitudes;
+        this.scoresAndLongitudes = scoresAndLongitudes;
     }
 }

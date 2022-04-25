@@ -8,7 +8,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -46,9 +45,10 @@ public class GameActivity extends AppCompatActivity {
     private Player player,hunter;
     private int direction = -1;
     private boolean move = false;
-    private int coinCounter = 0, coinX, coinY,boardX = 7, boardY = 5,maxScore = 0;
+    private int coinCounter = 0, coinX, coinY,maxScore = 0;
+    private static final int BOARD_X = 7, BOARD_Y = 5;
 
-    // Sound & Vibrate
+    // Sound & Vibration
     private MediaPlayer ring;
     private boolean isSound;
     private boolean isVibration;
@@ -79,6 +79,12 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         // Location Settings
+        Criteria locationCritera = new Criteria();
+        locationCritera.setAccuracy(Criteria.ACCURACY_FINE);
+        locationCritera.setAltitudeRequired(false);
+        locationCritera.setBearingRequired(false);
+        locationCritera.setCostAllowed(true);
+        locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
@@ -92,11 +98,19 @@ public class GameActivity extends AppCompatActivity {
                                 // Then update all the time and at every meters change.
                                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                                         0, mLocationListener);
+                                String providerName = mLocationManager.getBestProvider(locationCritera, true);
+                                Location location  = mLocationManager.getLastKnownLocation(providerName);
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
                             } else if (coarseLocationGranted != null && coarseLocationGranted) {
                                 // Only approximate location access granted.
                                 // Then update every limited time and at every limited meters change.
                                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_REFRESH_TIME,
                                         LOCATION_REFRESH_DISTANCE, mLocationListener);
+                                String providerName = mLocationManager.getBestProvider(locationCritera, true);
+                                Location location  = mLocationManager.getLastKnownLocation(providerName);
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
                             } else {
                                 // No location access granted.
                                 // Then we can't use the location track and the 1st score location functionality is disabled.
@@ -104,24 +118,12 @@ public class GameActivity extends AppCompatActivity {
                             }
                         }
                 );
-        // check whether your app already has the permissions,
-        // and whether your app needs to show a permission rationale dialog.
+        // check whether the app already has the permissions,
+        // and whether the app needs to show a permission rationale dialog.
         locationPermissionRequest.launch(new String[] {
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION
         });
-        // get last known location(before change) and set latitude and longitude
-        Criteria locationCritera = new Criteria();
-        locationCritera.setAccuracy(Criteria.ACCURACY_FINE);
-        locationCritera.setAltitudeRequired(false);
-        locationCritera.setBearingRequired(false);
-        locationCritera.setCostAllowed(true);
-        locationCritera.setPowerRequirement(Criteria.NO_REQUIREMENT);
-        String providerName = mLocationManager.getBestProvider(locationCritera, true);
-        Location location  = mLocationManager.getLastKnownLocation(providerName);
-
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
 
         getSupportActionBar().hide();
 
@@ -213,7 +215,7 @@ public class GameActivity extends AppCompatActivity {
 
     /**
      * This function set the chosen arrow opacity to 255 and the other arrows opacity to 128.
-     * @param chosenArrowButton
+     * @param chosenArrowButton - The arrow that needs to be highlighted.
      */
     private void setChosenArrowButton(int chosenArrowButton) {
         for (int i = 0; i < 4; i++)
@@ -255,12 +257,12 @@ public class GameActivity extends AppCompatActivity {
      * This function randomize location for the coin appearance on game board and set the coin image on the selected location.
      */
     private void randomCoinAppearance() {
-        coinX = (int) (Math.random() * boardX);
-        coinY = (int) (Math.random() * boardY);
+        coinX = (int) (Math.random() * BOARD_X);
+        coinY = (int) (Math.random() * BOARD_Y);
         // as long as the coin location equal to player or hunter keep randomizing new location
         while((coinX == player.getX() && coinY == player.getY()) || (coinX == hunter.getX() && coinY == hunter.getY())) {
-            coinX = (int) (Math.random() * boardX);
-            coinY = (int) (Math.random() * boardY);
+            coinX = (int) (Math.random() * BOARD_X);
+            coinY = (int) (Math.random() * BOARD_Y);
         }
         game_IMG_imgs[coinX][coinY].setImageResource(R.drawable.ic_coin);
     }
@@ -268,7 +270,7 @@ public class GameActivity extends AppCompatActivity {
     /**
      * This function execute the move function in the direction that selected for the player/hunter.
      * @param p The selected character - player or hunter.
-     * @param d The selected direction
+     * @param d The selected direction.
      */
     private void chooseDirection(Player p,int d) {
         switch (d) {
@@ -310,7 +312,7 @@ public class GameActivity extends AppCompatActivity {
      * @param p - The selected character - player or hunter.
      */
     private void moveRight(Player p) {
-        if (p.getY() < boardY - 1) {
+        if (p.getY() < BOARD_Y - 1) {
             game_IMG_imgs[p.getX()][p.getY()].setImageResource(R.drawable.ic_web);
             p.setY(p.getY() + 1);
             if(p.getName().equalsIgnoreCase("Player"))
@@ -326,7 +328,7 @@ public class GameActivity extends AppCompatActivity {
      * @param p - The selected character - player or hunter.
      */
     private void moveDown(Player p) {
-        if (p.getX() < boardX - 1) {
+        if (p.getX() < BOARD_X - 1) {
             game_IMG_imgs[p.getX()][p.getY()].setImageResource(R.drawable.ic_web);
             p.setX(p.getX() + 1);
             if(p.getName().equalsIgnoreCase("Player"))
