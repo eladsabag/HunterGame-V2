@@ -45,4 +45,6 @@ If you will enter the Top 10 button from the Home page then the toolbar and play
 
 ![Screenshot_20220424-014048_HunterGame-V2](https://user-images.githubusercontent.com/68230346/164949140-d11360d3-4493-4aa2-b32d-dc9f30b73486.jpg)
 
+Clicking on 1 out of the 10 scores will add marker to the location where that score happend. if there is unscored button(0) then it will get a default marker in Sydny but without a score.
+
 All of the scores and settings of the user being saved with shared preferences for the next use of the app.
