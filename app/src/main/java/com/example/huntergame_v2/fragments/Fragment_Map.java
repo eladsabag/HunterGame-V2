@@ -37,7 +37,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_fragment_map, container, false);
+        View view = inflater.inflate(R.layout.fragment_map, container, false);
 
         SupportMapFragment mapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
 
@@ -65,7 +65,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
             int key = (int) scoresAndLatitudes.descendingKeySet().toArray()[rank];
             latitude = (double) scoresAndLatitudes.get(key);
             longitude = (double) scoresAndLongitudes.get(key);
-            currentScore ="Score Location: " + key;
+            currentScore ="Location Score: " + key;
         } else { // default location
             latitude=-33.924167;
             longitude=150.882190;

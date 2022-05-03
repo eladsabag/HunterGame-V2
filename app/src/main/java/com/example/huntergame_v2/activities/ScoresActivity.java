@@ -3,7 +3,6 @@ package com.example.huntergame_v2.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import com.example.huntergame_v2.fragments.Fragment_Button;
 import com.example.huntergame_v2.fragments.Fragment_Rank;
 import com.example.huntergame_v2.fragments.Fragment_Map;
 import com.example.huntergame_v2.utils.MSP;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.TreeMap;
@@ -34,12 +32,6 @@ public class ScoresActivity extends AppCompatActivity {
     private Fragment_Rank fragment_rank;
     private Fragment_Map fragment_map;
     private Fragment_Button fragment_button;
-
-    // Shared Preferences
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor editor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +40,6 @@ public class ScoresActivity extends AppCompatActivity {
         // calling the action bar
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(null);
-
-        prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
         // get the maps jsons from shared preferences or initial init
         readMapsFromSharedPreferences();
@@ -83,7 +72,7 @@ public class ScoresActivity extends AppCompatActivity {
             ring.start();
         }
 
-        FrameLayout layout = (FrameLayout)findViewById(R.id.scores_LAY_button);
+        FrameLayout layout = findViewById(R.id.scores_LAY_button);
         if(isPlayAgain) { // came from game
             if(layout.getVisibility() == View.GONE)
                 layout.setVisibility(View.VISIBLE);

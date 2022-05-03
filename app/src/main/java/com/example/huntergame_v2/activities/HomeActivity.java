@@ -61,6 +61,9 @@ public class HomeActivity extends AppCompatActivity {
         setSoundAndVibrationResources();
     }
 
+    /**
+     * This function reads all game settings from shared preferences and init them.
+     */
     private void readSettingsFromSharedPreferences() {
         isSound = MSP.getMe(this).getBooleanFromSP("Sound",true);
         isVibration = MSP.getMe(this).getBooleanFromSP("Vibration",true);
