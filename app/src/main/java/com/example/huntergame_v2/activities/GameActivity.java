@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.huntergame_v2.R;
 import com.example.huntergame_v2.objects.GameManager;
+import com.example.huntergame_v2.objects.Player;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.DecimalFormat;
@@ -482,17 +483,6 @@ public class GameActivity extends AppCompatActivity {
         intent.putExtra("Longitude",longitude);
         startActivity(intent);
         finish();
-    }
-
-    private static class Player {
-        private int x,y;
-        private final String name;
-        public Player(int x,int y,String name) { this.x=x; this.y=y; this.name=name; }
-        public void setX(int x) { this.x=x; }
-        public int getX() { return x; }
-        public void setY(int y) { this.y=y; }
-        public int getY() { return y; }
-        public String getName() { return name; }
     }
 
     // ---------- ---------- Cycle ---------- ----------

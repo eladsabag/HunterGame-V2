@@ -49,7 +49,7 @@ public class Fragment_Map extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker in location and move the camera
         LatLng topScoreLocation = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(topScoreLocation).title(currentScore));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(topScoreLocation, zoomLevel));

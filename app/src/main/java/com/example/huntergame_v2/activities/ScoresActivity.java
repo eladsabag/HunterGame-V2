@@ -112,7 +112,7 @@ public class ScoresActivity extends AppCompatActivity {
      */
     private void saveMapsToSharedPreferences() {
         MSP.getMe(this).putMap("ScoresAndLatitudes",scoresAndLatitudes);
-        MSP.getMe(this).putMap("scoresAndLongitudes",scoresAndLongitudes);
+        MSP.getMe(this).putMap("ScoresAndLongitudes",scoresAndLongitudes);
     }
 
     /**
