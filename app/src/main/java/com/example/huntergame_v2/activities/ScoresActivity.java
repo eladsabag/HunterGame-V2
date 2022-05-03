@@ -14,6 +14,7 @@ import com.example.huntergame_v2.R;
 import com.example.huntergame_v2.fragments.Fragment_Button;
 import com.example.huntergame_v2.fragments.Fragment_Rank;
 import com.example.huntergame_v2.fragments.Fragment_Map;
+import com.example.huntergame_v2.utils.MSP;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -101,29 +102,17 @@ public class ScoresActivity extends AppCompatActivity {
      * This function reads the maps jsons from shared preferences and init them.
      */
     private void readMapsFromSharedPreferences() {
-        String json1 = prefs.getString("ScoresAndLatitudes",null);
-        String json2 = prefs.getString("ScoresAndLongitudes",null);
-
-        if(json1 == null || json2 == null) { // if the jsons are null then initial init of the maps is required.
-            scoresAndLatitudes = new TreeMap<Integer,Double>();
-            scoresAndLongitudes = new TreeMap<Integer,Double>();
-        } else { // else init the maps with the json true value
-            TypeToken token = new TypeToken<TreeMap<Integer,Double>>() {};
-            scoresAndLatitudes = new Gson().fromJson(json1, token.getType());
-            scoresAndLongitudes = new Gson().fromJson(json2, token.getType());
-        }
+        TypeToken token = new TypeToken<TreeMap<Integer,Double>>() {};
+        scoresAndLatitudes = MSP.getMe(this).getMap("ScoresAndLatitudes", token);
+        scoresAndLongitudes = MSP.getMe(this).getMap("ScoresAndLongitudes",token);
     }
 
     /**
      * This function saves the scores and latitudes/longitudes maps as jsons into shared preferences.
      */
     private void saveMapsToSharedPreferences() {
-        String j1 = new Gson().toJson(scoresAndLatitudes);
-        String j2 = new Gson().toJson(scoresAndLongitudes);
-
-        editor.putString("ScoresAndLatitudes",j1);
-        editor.putString("ScoresAndLongitudes",j2);
-        editor.apply();
+        MSP.getMe(this).putMap("ScoresAndLatitudes",scoresAndLatitudes);
+        MSP.getMe(this).putMap("scoresAndLongitudes",scoresAndLongitudes);
     }
 
     /**

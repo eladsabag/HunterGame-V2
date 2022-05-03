@@ -24,14 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.huntergame_v2.R;
+import com.example.huntergame_v2.utils.MSP;
 import com.google.android.material.button.MaterialButton;
 
 public class HomeActivity extends AppCompatActivity {
-    // Shared Preferences
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor editor;
-
     // Home
     private MaterialButton home_BTN_play, home_BTN_playsensor, home_BTN_top10;
     private MediaPlayer ring;
@@ -46,9 +42,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        prefs = getApplicationContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE);
-        editor = getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
 
         readSettingsFromSharedPreferences();
 
@@ -69,17 +62,17 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void readSettingsFromSharedPreferences() {
-        isSound = prefs.getBoolean("Sound",true);
-        isVibration = prefs.getBoolean("Vibration",true);
-        isChoseUsername = prefs.getBoolean("ChoseUsername",true);
-        username = prefs.getString("Username","");
+        isSound = MSP.getMe(this).getBooleanFromSP("Sound",true);
+        isVibration = MSP.getMe(this).getBooleanFromSP("Vibration",true);
+        isChoseUsername = MSP.getMe(this).getBooleanFromSP("ChoseUsername",true);
+        username = MSP.getMe(this).getStringFromSP("Username","");
     }
 
     /**
      * This function opens a dialog where the user can enter his username.
      */
     private void chooseUsername() {
-        // Set `EditText` to `dialog`. You can add `EditText` from `xml` too.
+        // Set `EditText` to `dialog`
         final EditText input = new EditText(HomeActivity.this);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -91,7 +84,6 @@ public class HomeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle("Enter username");
-        builder.setMessage("Hi, before you start playing a sign up is required. Please enter username :)");
         builder.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
@@ -104,9 +96,11 @@ public class HomeActivity extends AppCompatActivity {
             builder.setNegativeButton("Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface arg0, int arg1) {
-                            // DO TASK
+                            builder.create().cancel();
                         }
                     });
+        } else {
+            builder.setMessage("Hi, before you start playing a sign up is required. Please enter username :)");
         }
         builder.setCancelable(false);
         builder.setView(input);
@@ -284,11 +278,10 @@ public class HomeActivity extends AppCompatActivity {
      * This function saves all settings chosen by user into shared preferences.
      */
     private void saveSettingsToSharedPreferences() {
-        editor.putBoolean("Sound",isSound);
-        editor.putBoolean("Vibration",isVibration);
-        editor.putBoolean("ChoseUsername",isChoseUsername);
-        editor.putString("Username",username);
-        editor.apply();
+        MSP.getMe(this).putBooleanToSP("Sound",isSound);
+        MSP.getMe(this).putBooleanToSP("Vibration",isVibration);
+        MSP.getMe(this).putBooleanToSP("ChoseUsername",isChoseUsername);
+        MSP.getMe(this).putStringToSP("Username",username);
     }
 
     // ---------- ---------- Cycle ---------- ----------

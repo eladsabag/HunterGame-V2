@@ -1,4 +1,4 @@
-package com.example.huntergame_v2.activities;
+package com.example.huntergame_v2.objects;
 
 public class GameManager {
 

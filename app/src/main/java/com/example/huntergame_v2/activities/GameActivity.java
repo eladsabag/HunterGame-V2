@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.huntergame_v2.R;
+import com.example.huntergame_v2.objects.GameManager;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.text.DecimalFormat;
@@ -549,12 +550,12 @@ public class GameActivity extends AppCompatActivity {
                 if(!move) // disable movement at the first second( just for better view, not important )
                     move=true;
                 else {
+                    randomHunterDirection();
+                    gameManager.addToScore();
                     if(coinCounter++ == 10) {
                         coinCounter = 0;
                         randomCoinAppearance();
                     }
-                    randomHunterDirection();
-                    gameManager.addToScore();
                 }
                 game_LBL_score.setText("" + gameManager.getScore());
             }
