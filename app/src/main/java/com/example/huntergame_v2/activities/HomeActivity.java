@@ -5,17 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -24,7 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.huntergame_v2.R;
-import com.example.huntergame_v2.utils.MSP;
+import com.example.huntergame_v2.objects.MSP;
 import com.google.android.material.button.MaterialButton;
 
 public class HomeActivity extends AppCompatActivity {

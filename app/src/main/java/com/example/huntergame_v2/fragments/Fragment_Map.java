@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.example.huntergame_v2.CallBack_ScoreClicked;
+import com.example.huntergame_v2.callbacks.CallBack_ScoreClicked;
 import com.example.huntergame_v2.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.example.huntergame_v2.CallBack_ScoreClicked;
+import com.example.huntergame_v2.callbacks.CallBack_ScoreClicked;
 import com.example.huntergame_v2.R;
 import com.example.huntergame_v2.fragments.Fragment_Button;
 import com.example.huntergame_v2.fragments.Fragment_Rank;
 import com.example.huntergame_v2.fragments.Fragment_Map;
-import com.example.huntergame_v2.utils.MSP;
+import com.example.huntergame_v2.objects.MSP;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.TreeMap;

@@ -1,4 +1,4 @@
-package com.example.huntergame_v2.utils;
+package com.example.huntergame_v2.objects;
 
 import android.content.Context;
 import android.content.SharedPreferences;
